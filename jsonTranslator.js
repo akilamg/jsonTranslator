@@ -175,7 +175,11 @@ function jsonTranslator( file, defaultLang, transLang ){
 				var un_Text = eleText;
 
 				for( var key in json ) {
-					if( eleText.indexOf(key) > -1  && un_Text.length ){
+					//Each component in the text has been identified
+					if( un_Text.length === 0 ){
+						break;
+					}
+					else if( eleText.indexOf(key) > -1 ){
 						//Found text, replace it with the new language
 						eleText = eleText.replace(key, json[key]);
 						//Found text, update the yet to be identified text
