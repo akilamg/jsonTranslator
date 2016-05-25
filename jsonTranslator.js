@@ -16,7 +16,8 @@ function jsonTranslator( file, defaultLang, transLang ){
 	// Variable Initializations
 	var me = this,
 	EXP_DAYS = 1,
-	isJSON = true;
+	isJSON = true,
+	initTrans = false;
 
 	transLang = typeof transLang === "undefined" ? "": transLang;
 
@@ -45,6 +46,9 @@ function jsonTranslator( file, defaultLang, transLang ){
 	       		me.lang_json[defaultLang] = { "text-translator" : {}, "abbrv-translator" : {} };
 	       		me.lang_json[defaultLang]["text-translator"] = swapJson( file["text-translator"] );
 			me.lang_json[defaultLang]["abbrv-translator"] = swapJson( file["abbrv-translator"] );
+			
+			initTrans = true;
+
 		} else {
 			// jsonTranslator object parameters
 			me.langFilePath = file;
@@ -256,6 +260,16 @@ function jsonTranslator( file, defaultLang, transLang ){
 		}
 
 	};
+
+	// Do an initial Translation if the language cookie is set and initTrans variable
+	// is set to true
+	if( initTrans ){
+		var currLang = me.getLangCookie();
+		
+		if( typeof currLang !== "undefined" &&  currLang !== "" ){
+			me.translate(currLang);
+		}
+	}
 	
 }
 
