@@ -27,12 +27,12 @@ function jsonTranslator( file, defaultLang, transLang ){
 	} else if ( typeof file === 'object' ) {
 		file = file;
 	} else {
-	    	// Check if JSON String or file path 
-	    	try {
+    		// Check if JSON String or file path 
+    		try {
 			file = JSON.parse(file);
-	    	} catch (e) {
-	        	isJSON = false;
-	    	}
+    		} catch (e) {
+        		isJSON = false;
+    		}
 	}
 
 	// Initalizer
@@ -79,19 +79,19 @@ function jsonTranslator( file, defaultLang, transLang ){
 
 	    xmlHttp.onreadystatechange = function() { 
 	        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
-	            var currLang = me.getLangCookie(),
-	            json = JSON.parse( xmlHttp.responseText );
-				//Load the language JSON
-				me.lang_json[me.transLang] = json;
-				//Swap the translation language json to get the default language json
-				me.lang_json[me.defaultLang] = { "text-translator" : {}, "abbrv-translator" : {} };
-				me.lang_json[me.defaultLang] ["text-translator"] = swapJson( json["text-translator"] );
-				me.lang_json[me.defaultLang] ["abbrv-translator"] = swapJson( json["abbrv-translator"] );
-				//Only translate initially if language cookie is defined
-				if( typeof currLang !== "undefined" &&  currLang !== "" ){
-					me.translate(currLang);
-				}
+	            	var currLang = me.getLangCookie(),
+	            	json = JSON.parse( xmlHttp.responseText );
+			//Load the language JSON
+			me.lang_json[me.transLang] = json;
+			//Swap the translation language json to get the default language json
+			me.lang_json[me.defaultLang] = { "text-translator" : {}, "abbrv-translator" : {} };
+			me.lang_json[me.defaultLang] ["text-translator"] = swapJson( json["text-translator"] );
+			me.lang_json[me.defaultLang] ["abbrv-translator"] = swapJson( json["abbrv-translator"] );
+			//Only translate initially if language cookie is defined
+			if( typeof currLang !== "undefined" &&  currLang !== "" ){
+				me.translate(currLang);
 			}
+		}
 	    }
 
 	    xmlHttp.open("GET", filePath, true);
@@ -155,9 +155,9 @@ function jsonTranslator( file, defaultLang, transLang ){
 						for( var key in json ) {
 							if( un_Text.indexOf(key) > -1 &&  un_Text.length ){
 								//Found text, replace it with the new language
-								subText = subText.replace(key, json[key]);
+								subText = subText.replaceAll(key, json[key]);
 								//Found text, update the yet to be identified text
-								un_Text = un_Text.replace(key, "");
+								un_Text = un_Text.replaceAll(key, "");
 							}
 						}
 					}
@@ -185,9 +185,9 @@ function jsonTranslator( file, defaultLang, transLang ){
 					}
 					else if( eleText.indexOf(key) > -1 ){
 						//Found text, replace it with the new language
-						eleText = eleText.replace(key, json[key]);
+						eleText = eleText.replaceAll(key, json[key]);
 						//Found text, update the yet to be identified text
-						un_Text = un_Text.replace(key, "");
+						un_Text = un_Text.replaceAll(key, "");
 					}
 				}
 			}
@@ -272,6 +272,26 @@ function jsonTranslator( file, defaultLang, transLang ){
 	}
 	
 }
+
+// Replace all occurencess of sub-string without using regular expressions (slow)
+String.prototype.replaceAll = function(_f, _r, _c){ 
+  var o = this.toString();
+  var r = '';
+  var s = o;
+  var b = 0;
+  var e = -1;
+  if(_c){ _f = _f.toLowerCase(); s = o.toLowerCase(); }
+  while((e=s.indexOf(_f)) > -1)
+  {
+    r += o.substring(b, b+e) + _r;
+    s = s.substring(e+_f.length, s.length);
+    b += e+_f.length;
+  }
+  // Add Leftover
+  if(s.length>0){ r+=o.substring(o.length-s.length, o.length); }
+  // Return New String
+  return r;
+};
 
 // Cookie management courtesy of W3Schools
 
