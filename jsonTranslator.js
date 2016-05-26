@@ -225,18 +225,19 @@ function jsonTranslator( file, defaultLang, transLang ){
 	this.setLangCookie = function(lang){
 		var now = new Date();
 		//var expTime = now.setTime( now.getTime() + ( me.getExpHours()*60*60*1000 ) );
-		setCookie("lang", lang, me.getExpHours());
+		var expDays = typeof me.getExpDays() === "undefined" ? 365 : me.getExpDays();
+		setCookie("lang", lang, me.getExpDays());
 	};
 	// Get the cookie "lang"
 	this.getLangCookie = function(){
 		return getCookie("lang");
 	};
-	// Set the expiration hours for the cookie
-	this.setExpHours = function(hours){
-		me.EXP_DAYS = hours;
+	// Set the expiration days for the cookie
+	this.setExpDays = function(days){
+		me.EXP_DAYS = days;
 	};
-	// Get the expiration hours for the cookie previously set by the user
-	this.getExpHours = function(){
+	// Get the expiration days for the cookie previously set by the user
+	this.getExpDays = function(){
 		return me.EXP_DAYS;
 	};
 	// Translates to the provided language (the key must match the loaded JSON)
